@@ -119,3 +119,100 @@ Authenticate a user with email and password, returning a JWT token if credential
 - Both email and password must match an existing user in the database.
 - Password comparison is done securely using bcrypt.
 - Upon successful login, a new JWT token is generated for the session.
+
+---
+
+## GET /users/profile
+
+### Description
+Retrieve the authenticated user's profile information.
+
+### Request URL
+`/users/profile`
+
+### Method
+`GET`
+
+### Authentication
+- **Required**: Yes (Bearer token or cookie)
+- Token can be passed via:
+  - Cookie: `token=<jwt-token>`
+  - Header: `Authorization: Bearer <jwt-token>`
+
+### Request Headers
+- `Authorization: Bearer <jwt-token>` (optional if using cookies)
+- `Cookie: token=<jwt-token>` (optional if using Authorization header)
+
+### Request Body
+No body required.
+
+### Success Response
+- Status: `200 OK`
+- Body:
+```json
+{
+  "_id": "<user-id>",
+  "fullname": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": null,
+  "createdAt": "<timestamp>",
+  "updatedAt": "<timestamp>"
+}
+```
+
+### Error Responses
+- `401 Unauthorized` when token is missing or invalid.
+  - Body: `{ "message": "Unauthorized" }`
+- `401 Unauthorized` when token is blacklisted (logged out).
+  - Body: `{ "message": "Unauthorized" }`
+
+### Notes
+- This endpoint requires a valid JWT token.
+- User information is retrieved from the authenticated session.
+
+---
+
+## GET /users/logout
+
+### Description
+Logout the authenticated user by invalidating their JWT token and clearing the session.
+
+### Request URL
+`/users/logout`
+
+### Method
+`GET`
+
+### Authentication
+- **Required**: Yes (Bearer token or cookie)
+- Token can be passed via:
+  - Cookie: `token=<jwt-token>`
+  - Header: `Authorization: Bearer <jwt-token>`
+
+### Request Headers
+- `Authorization: Bearer <jwt-token>` (optional if using cookies)
+- `Cookie: token=<jwt-token>` (optional if using Authorization header)
+
+### Request Body
+No body required.
+
+### Success Response
+- Status: `200 OK`
+- Body:
+```json
+{
+  "message": "Logged out"
+}
+```
+
+### Error Responses
+- `401 Unauthorized` when token is missing or invalid.
+  - Body: `{ "message": "Unauthorized" }`
+
+### Notes
+- The token is added to a blacklist to prevent further use.
+- The token cookie is cleared on the client side.
+- After logout, the token is no longer valid for subsequent requests.
