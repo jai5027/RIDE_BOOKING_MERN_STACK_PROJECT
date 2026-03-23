@@ -9,6 +9,8 @@ import CaptainLogin from './pages/CaptainLogin.jsx'
 import CaptainSignup from './pages/CaptainSignup.jsx'
 import { UserProvider } from './context/userContext.jsx'
 import Home from './pages/Home.jsx'
+import UserProtectedWrapper from './pages/UserProtectedWrapper.jsx'
+import UserLogout from './pages/UserLogout.jsx'
 
 const router = createBrowserRouter([{
       path: '/',
@@ -16,7 +18,10 @@ const router = createBrowserRouter([{
       children: [
           {
             path: '/home',
-            element: <Home />
+            element: 
+            <UserProtectedWrapper>
+            <Home />
+            </UserProtectedWrapper>
           },
           {
             index: true,
@@ -37,6 +42,13 @@ const router = createBrowserRouter([{
           {
             path: '/captain-signup',
             element: <CaptainSignup />
+          },
+          {
+            path: '/users/logout',
+            element: 
+             <UserProtectedWrapper>
+            <UserLogout />
+            </UserProtectedWrapper>
           }
       ] 
   }      

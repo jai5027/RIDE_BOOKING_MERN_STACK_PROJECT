@@ -26,6 +26,7 @@ const UserSignup = () => {
     if(respone.status === 201){
     const data = respone.data
     setUser(data.user)
+    localStorage.setItem('token', data.token)
     navigate('/home')
   }
     } catch (error) {
