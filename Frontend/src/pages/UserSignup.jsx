@@ -1,21 +1,39 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useUser } from '../context/userContext.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const UserSignup = () => {
   
-  const [data, setData] = useState({ firstname: '', lastname: '', email: '', password: '' })
+  const [data, setData] = useState({ firstName: '', lastName: '', email: '', password: '' })
+  const navigate = useNavigate()
+  const { user, setUser } = useUser()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const newUser = {
-      fullName: {
-        firstname: data.firstname,
-        lastname: data.lastname
+      fullname: {
+        firstName: data.firstName,
+        lastName: data.lastName
       },
       email: data.email,
       password: data.password
     }
-    setData({ firstname: '', lastname: '', email: '', password: '' })
+    try {
+    const respone = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+
+    if(respone.status === 201){
+    const data = respone.data
+    setUser(data.user)
+    navigate('/home')
+  }
+    } catch (error) {
+      console.log(error.response?.data)
+    }
+
+
+    setData({ firstName: '', lastName: '', email: '', password: '' })
   }
 
   const handleChange = (e) => {
@@ -32,18 +50,18 @@ const UserSignup = () => {
 
         <div className='flex gap-4 mb-6'>
        <input 
-        name='firstname'
+        name='firstName'
         onChange={handleChange}
-        value={data.firstname}
+        value={data.firstName}
         required 
         className='bg-gray-200 rounded-lg px-4 py-2 w-1/2 text-lg placeholder:text-sm'
         type='text' 
         placeholder='Firstname'/>  
 
        <input 
-        name='lastname'
+        name='lastName'
         onChange={handleChange}
-        value={data.lastname}
+        value={data.lastName}
         required 
         className='bg-gray-200 rounded-lg px-4 py-2 w-1/2 text-lg placeholder:text-sm'
         type='text' 
