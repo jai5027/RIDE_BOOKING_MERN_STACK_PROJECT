@@ -96,7 +96,7 @@ const UserSignup = () => {
        >Create account</button>
       
       </form>
-       <p className='text-center' >Already have a account?<Link to='/login' className='text-blue-600 '>Login here</Link></p>
+       <p className='text-center' >Already have a account?<Link to='/login' className='text-blue-600'>Login here</Link></p>
       </div>
 
       <div>

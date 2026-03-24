@@ -11,6 +11,10 @@ import { UserProvider } from './context/userContext.jsx'
 import Home from './pages/Home.jsx'
 import UserProtectedWrapper from './pages/UserProtectedWrapper.jsx'
 import UserLogout from './pages/UserLogout.jsx'
+import { ProvideContext } from './context/CaptainContext.jsx'
+import CaptainHome from './pages/CaptainHome.jsx';
+import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper.jsx'
+import CaptainLogout from './pages/CaptainLogout.jsx'
 
 const router = createBrowserRouter([{
       path: '/',
@@ -49,13 +53,29 @@ const router = createBrowserRouter([{
              <UserProtectedWrapper>
             <UserLogout />
             </UserProtectedWrapper>
+          },
+          {
+            path: '/captain-home',
+            element: 
+            <CaptainProtectedWrapper>
+            <CaptainHome />
+            </CaptainProtectedWrapper>
+          },
+          {
+            path: '/captain-logout',
+            element: 
+            <CaptainProtectedWrapper>
+            <CaptainLogout/>
+            </CaptainProtectedWrapper>
           }
       ] 
   }      
 ])
 
 createRoot(document.getElementById('root')).render(
+    <ProvideContext>
     <UserProvider>
     <RouterProvider router={router}/>
     </UserProvider>
+    </ProvideContext>
 )

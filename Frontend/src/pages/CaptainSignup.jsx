@@ -1,79 +1,126 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useCaptain } from '../context/CaptainContext.jsx'
 
 const CaptainSignup = () => {
-   const [data, setData] = useState({ firstname: '', lastname: '', email: '', password: '' })
-  
-    const handleSubmit = (e) => {
-      e.preventDefault()
-      setData({ firstname: '', lastname: '', email: '', password: '' })
-  
+  const navigate = useNavigate()
+  const { captain, setCaptain } = useCaptain()
+
+  const [data, setData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    color: '',
+    plate: '',
+    capacity: '',
+    vehicleType: ''
+  })
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const captainData = {
+      fullname: {
+        firstName: data.firstname,
+        lastName: data.lastname
+      },
+      email: data.email,
+      password: data.password,
+      vehicle: {
+        color: data.color,
+        plate: data.plate,
+        capacity: Number(data.capacity),
+        vehicleType: data.vehicleType
+      }
     }
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target
-      setData((prev) => ({ ...prev, [name]: value }))
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captains/register`,
+        captainData
+      )
+
+      if (response.status === 201) {
+        const data = response.data
+        setCaptain(data.captain)
+        localStorage.setItem('token', data.token)
+        navigate('/captain-home')
+      }
+    } catch (error) {
+      console.log(error.response?.data)
     }
+
+    setData({
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+      color: '',
+      plate: '',
+      capacity: '',
+      vehicleType: ''
+    })
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setData((prev) => ({ ...prev, [name]: value }))
+  }
+
   return (
- <div className='p-7 h-screen flex flex-col justify-between'>
+    <div className='p-7 h-screen flex flex-col justify-between'>
       <div>
-          <img className='w-16 mb-8' src='https://pngimg.com/d/uber_PNG24.png' alt=''/>
-      <form onSubmit={handleSubmit}>
-        <h3 className='text-base font-medium mb-2'>What's our Captain's name</h3>
+        <img className='w-16 mb-8' src='https://pngimg.com/d/uber_PNG24.png' alt='' />
 
-        <div className='flex gap-4 mb-6'>
-       <input 
-        name='firstname'
-        onChange={handleChange}
-        value={data.firstname}
-        required 
-        className='bg-gray-200 rounded-lg px-4 py-2 w-1/2 text-lg placeholder:text-sm'
-        type='text' 
-        placeholder='Firstname'/>  
+        <form onSubmit={handleSubmit}>
+          <h3 className='text-lg font-semibold mb-2'>Captain Information</h3>
 
-       <input 
-        name='lastname'
-        onChange={handleChange}
-        value={data.lastname}
-        required 
-        className='bg-gray-200 rounded-lg px-4 py-2 w-1/2 text-lg placeholder:text-sm'
-        type='text' 
-        placeholder='Lastname'/>  
-        </div> 
-      
-        <h3 className='text-base font-medium mb-2'>What's our Captain's email</h3>
+          <div className='flex gap-4 mb-6'>
+            <input name='firstname' value={data.firstname} onChange={handleChange}
+              className='bg-gray-200 px-4 py-2 w-1/2 rounded-lg' placeholder='Firstname' />
 
-        <input 
-        onChange={handleChange}
-        value={data.email}
-        name='email'
-        required 
-        className='bg-gray-200 mb-6 rounded-lg px-4 py-2 w-full text-lg placeholder:text-sm'
-        type='email' 
-        placeholder='email@example.com'/>
+            <input name='lastname' value={data.lastname} onChange={handleChange}
+              className='bg-gray-200 px-4 py-2 w-1/2 rounded-lg' placeholder='Lastname' />
+          </div>
 
-        <h3 className='text-base font-medium mb-2' >Enter Password</h3>
-        
-        <input 
-        onChange={handleChange}
-        value={data.password}
-        name='password'
-        required 
-        className='bg-gray-200 mb-6 rounded-lg px-4 py-2 w-full text-lg placeholder:text-sm'
-        type='password' 
-        placeholder='password'/>
+          <input name='email' value={data.email} onChange={handleChange}
+            className='bg-gray-200 mb-4 px-4 py-2 w-full rounded-lg'
+            placeholder='email@example.com' />
 
-      <button 
-        className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-sm'
-       >Login</button>
-      
-      </form>
-       <p className='text-center' >Already have a account?<Link to='/captain-login' className='text-blue-600 '>Login here</Link></p>
-      </div>
+          <input name='password' value={data.password} onChange={handleChange}
+            className='bg-gray-200 mb-4 px-4 py-2 w-full rounded-lg'
+            placeholder='password' />
 
-      <div>
-        <p className='text-[10px] leading-tight'>This site is protected by reCAPTCHA and the Google <a className='text-blue-600'>Privacy Policy</a> and <a className='text-blue-600'>Terms of Service</a> apply.
+          {/* 🚗 Vehicle Fields */}
+          <input name='color' value={data.color} onChange={handleChange}
+            className='bg-gray-200 mb-4 px-4 py-2 w-full rounded-lg'
+            placeholder='Vehicle Color' />
+
+          <input name='plate' value={data.plate} onChange={handleChange}
+            className='bg-gray-200 mb-4 px-4 py-2 w-full rounded-lg'
+            placeholder='Plate Number' />
+
+          <input name='capacity' value={data.capacity} onChange={handleChange}
+            className='bg-gray-200 mb-4 px-4 py-2 w-full rounded-lg'
+            placeholder='Capacity' type='number' />
+
+          <select name='vehicleType' value={data.vehicleType} onChange={handleChange}
+            className='bg-gray-200 mb-4 px-4 py-2 w-full rounded-lg'>
+            <option value=''>Select Vehicle Type</option>
+            <option value='car'>Car</option>
+            <option value='motorcycle'>Motorcycle</option>
+            <option value='auto'>Auto</option>
+          </select>
+
+          <button className='bg-black text-white w-full py-2 rounded-lg'>
+            Create Account
+          </button>
+        </form>
+
+        <p className='text-center mt-2'>
+          Already have account? <Link to='/captain-login' className='text-blue-400'>Login</Link>
         </p>
       </div>
     </div>
