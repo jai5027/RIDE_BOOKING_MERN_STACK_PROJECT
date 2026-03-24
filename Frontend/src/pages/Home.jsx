@@ -7,8 +7,10 @@ import LocationSearchPenal from '../components/LocationSearchPenal.jsx'
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
   const [panelOpen, setPanelOpen] = useState(false)
+  const vehiclePanelRef = useRef(null)
   const panelRef = useRef(null)
   const panelCloseRef = useRef(null)
+  const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false)
 
   const HandleSubmit = (e) => {
     e.preventDefault()
@@ -38,6 +40,18 @@ const Home = () => {
     })
    }
   }, [panelOpen])
+
+  useGSAP(() => {
+    if(vehiclePanelOpen){
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(vehiclePanelRef.current, {
+        transform: 'translate(100%)'
+      })
+    }
+  }, [vehiclePanelOpen])
 
   return (
     <div className='h-screen relative overflow-hidden'>
@@ -75,21 +89,56 @@ const Home = () => {
       </div>
 
       <div ref={panelRef} className='bg-white'>
-         <LocationSearchPenal />
+         <LocationSearchPenal setPanelOpen={setPanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
       </div>
       </div>
 
-      <div className='fixed w-full z-10 bottom-0 px-3 py-6 bg-white'>
-        <div className='p-3 flex border-2 border-black rounded-xl w-full justify-center items-center'>
-            <img className='h-20' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=368/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy82NDkzYzI1NS04N2M4LTRlMmUtOTQyOS1jZjcwOWJmMWI4MzgucG5n' alt=''/>
+      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
+        <h5 onClick={() => setVehiclePanelOpen(false)} className='p-2 text-center absolute top-2 right-4'>
+        <i className="text-2xl text-gray-400 ri-arrow-down-wide-line"></i>
+        </h5>
+        <h3 className='text-2xl font-semibold mb-5'>Choose a Vehicle</h3>
+
+          <div className='p-3 mb-2 flex border-2 border-gray-300 active:border-black rounded-xl w-full justify-center items-center'>
+            <img className='h-15' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9iYWRmYjFkNi02YzJiLTQ1NTMtYjkyOS05ZmYzMmYwMmE1NWUucG5n' alt=''/>
            
-           <div className='w-1/2'>
+           <div className='ml-2 w-1/2'>
             <h4 className='font-medium text-base'>UberGo <span><i className="ri-user-fill"></i>4</span></h4>
             <h5 className='font-medium text-sm'>2 mins away</h5>
             <p className='font-normal text-xs text-gray-600'>Affordable, compact rides</p>
            </div>
 
-           <h2 className='text-xl font-semibold'>₹193.20</h2>
+           <h2 className='text-lg font-semibold'>₹193.20</h2>
+       <div>
+        
+       </div>
+        </div>
+
+         <div className='p-3 mb-2 flex border-2 border-gray-300 active:border-black rounded-xl w-full justify-center items-center'>
+            <img className='h-15' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy85MjAwMTg5YS03MWMwLTRmNmQtYTlkZS0xYjZhODUyMzkwNzkucG5n' alt=''/>
+           
+           <div className='ml-2 w-1/2'>
+            <h4 className='font-medium text-base'>Moto <span><i className="ri-user-fill"></i>1</span></h4>
+            <h5 className='font-medium text-sm'>3 mins away</h5>
+            <p className='font-normal text-xs text-gray-600'>Affordable, motorcycle rides</p>
+           </div>
+
+           <h2 className='text-lg font-semibold'>₹65.17</h2>
+       <div>
+        
+       </div>
+        </div>
+
+          <div className='p-3 mb-2 flex border-2 border-gray-300 active:border-black rounded-xl w-full justify-center items-center'>
+            <img className='h-15' src='https://clipart-library.com/2023/Uber_Auto_312x208_pixels_Mobile.png' alt=''/>
+           
+           <div className='ml-2 w-1/2'>
+            <h4 className='font-medium text-base'>UberAuto <span><i className="ri-user-fill"></i>3</span></h4>
+            <h5 className='font-medium text-sm'>2 mins away</h5>
+            <p className='font-normal text-xs text-gray-600'>Affordable, auto rides</p>
+           </div>
+
+           <h2 className='text-lg font-semibold'>₹65.17</h2>
        <div>
         
        </div>
