@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 const ConfirmedRide = (props) => {
   return (
@@ -37,9 +36,9 @@ const ConfirmedRide = (props) => {
             </div>
 
         </div>
-        <Link onClick={() => {props.setLookingForDriverPanelOpen(true) 
+        <button onClick={() => {props.setLookingForDriverPanelOpen(true) 
                                 props.setConfirmedRidePanelOpen(false)}} 
-        className='flex justify-center w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>Confirm</Link>
+        className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>Confirm</button>
         </div>   
     </div>
   )

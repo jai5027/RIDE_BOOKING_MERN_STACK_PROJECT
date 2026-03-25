@@ -16,6 +16,7 @@ import CaptainHome from './pages/CaptainHome.jsx';
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper.jsx'
 import CaptainLogout from './pages/CaptainLogout.jsx'
 import Riding from './pages/Riding.jsx';
+import CaptainRiding from './pages/CaptainRiding.jsx';
 
 const router = createBrowserRouter([{
       path: '/',
@@ -75,6 +76,13 @@ const router = createBrowserRouter([{
             <UserProtectedWrapper>
               <Riding />
             </UserProtectedWrapper>
+          },
+          {
+            path: '/captain-riding',
+            element: 
+            <CaptainProtectedWrapper>
+              <CaptainRiding />
+            </CaptainProtectedWrapper>
           }
       ] 
   }      
