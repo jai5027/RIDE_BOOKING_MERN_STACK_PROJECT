@@ -1,15 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const CaptainHome = () => {
+const Riding = () => {
   return (
-     <div className='h-screen'>
-      <div>
+    <div className='h-screen'>
       <Link to='/home' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
-        <i className="text-lg font-medium ri-logout-box-line"></i>
+        <i className="text-lg font-medium ri-home-5-line"></i>
       </Link>
-      </div>
-      
+
       <div className='h-1/2'>
         <img className='h-full w-full object-cover' src='https://cdn.theatlantic.com/thumbor/BlEOtTo9L9mjMLuyCcjG3xYr4qE=/0x48:1231x740/960x540/media/img/mt/2017/04/IMG_7105/original.png' alt=''/>
       </div>
@@ -53,4 +51,4 @@ const CaptainHome = () => {
   )
 }
 
-export default CaptainHome
+export default Riding

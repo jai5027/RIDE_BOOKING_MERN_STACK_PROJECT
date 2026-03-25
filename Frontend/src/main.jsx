@@ -15,6 +15,7 @@ import { ProvideContext } from './context/CaptainContext.jsx'
 import CaptainHome from './pages/CaptainHome.jsx';
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper.jsx'
 import CaptainLogout from './pages/CaptainLogout.jsx'
+import Riding from './pages/Riding.jsx';
 
 const router = createBrowserRouter([{
       path: '/',
@@ -67,6 +68,13 @@ const router = createBrowserRouter([{
             <CaptainProtectedWrapper>
             <CaptainLogout/>
             </CaptainProtectedWrapper>
+          },
+          {
+            path: '/riding',
+            element:
+            <UserProtectedWrapper>
+              <Riding />
+            </UserProtectedWrapper>
           }
       ] 
   }      

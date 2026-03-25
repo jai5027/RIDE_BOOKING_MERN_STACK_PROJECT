@@ -6,6 +6,7 @@ import LocationSearchPenal from '../components/LocationSearchPenal.jsx'
 import VehiclePanel from '../components/VehiclePanel.jsx'
 import ConfirmedRide from '../components/ConfirmedRide.jsx'
 import LookingForDriver from '../components/LookingForDriver.jsx'
+import WaitingForDriver from '../components/WaitingForDriver.jsx'
 
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
@@ -15,9 +16,11 @@ const Home = () => {
   const panelRef = useRef(null)
   const panelCloseRef = useRef(null)
   const lookingForDriverRef = useRef(null)
+  const waitingForDriverRef = useRef(null)
   const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false)
   const [confirmedRidePanelOpen, setConfirmedRidePanelOpen] = useState(false)
   const [lookingForDriverPanelOpen, setLookingForDriverPanelOpen] = useState(false)
+  const [waitingFroDriverPanelOpen, setWaitingFroDriverPanelOpen] = useState(false)
 
   const HandleSubmit = (e) => {
     e.preventDefault()
@@ -84,8 +87,21 @@ const Home = () => {
     }
   }, [lookingForDriverPanelOpen])
 
+    useGSAP(() => {
+    if(waitingFroDriverPanelOpen){
+      gsap.to(waitingForDriverRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(waitingForDriverRef.current, {
+        transform: 'translate(100%)'
+      })
+    }
+  }, [waitingFroDriverPanelOpen])
+
+
   return (
-    <div className='h-screen relative overflow-hidden'>
+    <div className='h-screen relative'>
       <img className='w-16 absolute left-5 top-5' src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'/>
       
       <div className='h-screen w-screen'>
@@ -134,6 +150,10 @@ const Home = () => {
 
         <div ref={lookingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
          <LookingForDriver setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
+      </div>
+
+        <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
+         <WaitingForDriver setWaitingFroDriverPanelOpen={setWaitingFroDriverPanelOpen} />
       </div>
     </div>
   )
