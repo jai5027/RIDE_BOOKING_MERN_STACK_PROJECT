@@ -1,16 +1,22 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
-const ConfirmedRide = (props) => {
+const ConfirRidePopup = (props) => {
   return (
-    <div >
-       <h5 onClick={() => props.setConfirmedRidePanelOpen(false)} className='p-2 text-center absolute top-2 right-4'>
+      <div>
+        <h5 onClick={() => props.setConfirmRidePopupPanel(false)} className='p-2 text-center absolute top-2 right-4'>
         <i className="text-2xl text-gray-400 ri-arrow-down-wide-line"></i>
         </h5>
-        <h3 className='text-2xl font-semibold mb-5'>Confirm your Ride</h3>
+        <h3 className='text-2xl mb-3 font-semibold'>Confirm this ride to Start</h3>
+
+        <div className='flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4'>
+            <div className='flex items-center gap-3'>
+                <img className='h-12 rounded-full object-cover w-12' src='https://img.freepik.com/premium-photo/portrait-smiling-driver-driving-his-car-giving-thumbs-up-camera_232070-25141.jpg' />
+                <h2 className='text-lg font-medium'>Pawan Sharma</h2>
+            </div>
+            <h5 className='text-lg font-medium'>2.2 KM</h5>
+        </div>
 
         <div className='flex gap-2 justify-center items-center flex-col'>
-        <img className='h-20' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9iYWRmYjFkNi02YzJiLTQ1NTMtYjkyOS05ZmYzMmYwMmE1NWUucG5n' alt=''/>  
         <div className='w-full mt-5'>
             <div className='flex items-center gap-5 p-3 border-b'>
                 <i className="text-lg ri-map-pin-user-fill"></i>
@@ -37,12 +43,15 @@ const ConfirmedRide = (props) => {
             </div>
 
         </div>
-        <Link onClick={() => {props.setLookingForDriverPanelOpen(true) 
-                                props.setConfirmedRidePanelOpen(false)}} 
-        className='flex justify-center w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>Confirm</Link>
+        <button
+        className='w-full mt-3 bg-green-600 text-white font-semibold p-2 rounded-lg'>Confirm</button>
+       <button onClick={() => {props.setConfirmRidePopupPanel(false)
+                               props.setRidePopupPanel(false)}}
+        className='w-full mt-2 bg-red-600 text-white font-semibold p-2 rounded-lg'>Cancel</button>
+      
         </div>   
     </div>
   )
 }
 
-export default ConfirmedRide
+export default ConfirRidePopup

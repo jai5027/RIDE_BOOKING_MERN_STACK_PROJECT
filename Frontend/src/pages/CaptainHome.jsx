@@ -1,53 +1,68 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import CaptainDetails from '../components/CaptainDetails'
+import RidePopup from '../components/RidePopup'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import ConfirRidePopup from '../components/ConfirRidePopup'
 
 const CaptainHome = () => {
+
+  const [ridePopupPanel, setRidePopupPanel] = useState(true)
+  const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false)
+  const ridePopupPanelRef = useRef(null)
+  const confirmRidePopupPanelRef = useRef(null)
+
+  useGSAP(() => {
+    if(ridePopupPanel){
+      gsap.to(ridePopupPanelRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(ridePopupPanelRef.current, {
+        transform: 'translate(100%)'
+      })
+    }
+  }, [ridePopupPanel])
+
+  useGSAP(() => {
+    if(confirmRidePopupPanel){
+      gsap.to(confirmRidePopupPanelRef.current, {
+        transform: 'translateY(0)'
+      })
+    } else {
+      gsap.to(confirmRidePopupPanelRef.current, {
+        transform: 'translate(100%)'
+      })
+    }
+  }, [confirmRidePopupPanel])
+
   return (
      <div className='h-screen'>
-      <div>
-      <Link to='/home' className='fixed top-2 right-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+      <div className='fixed p-6 top-0 flex items-center justify-between w-full'>
+        <img className='w-16' src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png' alt=''/>
+      <Link to='/home' className='h-10 w-10 bg-white flex items-center justify-center rounded-full'>
         <i className="text-lg font-medium ri-logout-box-line"></i>
       </Link>
       </div>
-      
-      <div className='h-1/2'>
+
+      <div className='h-3/5'>
         <img className='h-full w-full object-cover' src='https://cdn.theatlantic.com/thumbor/BlEOtTo9L9mjMLuyCcjG3xYr4qE=/0x48:1231x740/960x540/media/img/mt/2017/04/IMG_7105/original.png' alt=''/>
       </div>
 
       <div>
-        <div className='h-1/2 p-4'>
-        <div className='flex items-center justify-between'>
-        <img className='h-15' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9iYWRmYjFkNi02YzJiLTQ1NTMtYjkyOS05ZmYzMmYwMmE1NWUucG5n' alt=''/>  
-        <div className='text-right'>
-            <h2 className='text-lg font-medium'>Aayan</h2>
-            <h4 className='text-xl font-semibold -mt-1 -mb-1'>RJ20 BY 8907</h4>
-            <p className='text-sm text-gray-600'>Maruti suzuki alto</p>
+        <div className='h-2/5 p-6'>
+         <CaptainDetails />
         </div>
-        </div>
-    
-        <div className='flex gap-2 justify-center items-center flex-col'>
-        <div className='w-full mt-5'>
-         
-            <div className='flex items-center gap-5 p-3 border-b'>
-                <i className="text-lg ri-map-pin-2-fill"></i>
-                <div>
-                    <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>Kahankariya Talab, Jaipur</p>
-                </div>
-            </div>
 
-            <div className='flex items-center gap-5 p-3'>
-                <i className="ri-currency-line"></i>
-                <div>
-                    <h3 className='text-lg font-medium'>₹193.20</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>Cash Cash</p>
-                </div>
-            </div>
+         <div ref={ridePopupPanelRef} className='fixed w-full z-10 bottom-0 translate-y-full px-3 py-10 bg-white'>
+           <RidePopup setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel}/>
+      </div>
 
-        </div>
-       </div>
-        <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg' >Make a Payment</button>
-        </div>
+        <div ref={confirmRidePopupPanelRef} className='fixed w-full h-screen z-10 bottom-0 translate-y-full px-3 py-10 bg-white'>
+           <ConfirRidePopup setConfirmRidePopupPanel={setConfirmRidePopupPanel} setRidePopupPanel={setRidePopupPanel}/>
+      </div>
+
       </div>
     </div>
   )
