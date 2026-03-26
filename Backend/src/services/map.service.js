@@ -15,7 +15,6 @@ const getCoordinates = async (address) => {
       },
       }
     );
-    console.log(response)
     if (!response.data.length) {
       throw new Error("Location not found");
     }
@@ -51,7 +50,6 @@ const getDistanceTime = async (origin, destination) => {
           },
         }
       );
-
       if (!response.data.length) {
         throw new Error("Location not found");
       }
@@ -81,7 +79,40 @@ const getDistanceTime = async (origin, destination) => {
   }
 };
 
+const getSuggestions = async (input) => {
+    if(!input){
+        throw new Error('query is required')
+    }
+      try {
+
+    const response = await axios.get(
+      "https://nominatim.openstreetmap.org/search",
+      {
+        params: {
+          q: input,
+          format: "json",
+          addressdetails: 1,
+          limit: 10, 
+        },
+        headers: {
+          "User-Agent": "uber-clone-backend (jiger@email.com)",
+        },
+      }
+    );
+    
+    return response.data.map((item) => ({
+      display_name: item.display_name,
+      latitude: item.lat,
+      longitude: item.lon,
+    }));
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 module.exports = {
   getCoordinates,
   getDistanceTime,
+  getSuggestions
 };
