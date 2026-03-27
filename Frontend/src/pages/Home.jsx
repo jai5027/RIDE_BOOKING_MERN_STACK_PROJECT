@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import 'remixicon/fonts/remixicon.css'
@@ -7,6 +7,7 @@ import VehiclePanel from '../components/VehiclePanel.jsx'
 import ConfirmedRide from '../components/ConfirmedRide.jsx'
 import LookingForDriver from '../components/LookingForDriver.jsx'
 import WaitingForDriver from '../components/WaitingForDriver.jsx'
+import axios from 'axios'
 
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
@@ -21,6 +22,8 @@ const Home = () => {
   const [confirmedRidePanelOpen, setConfirmedRidePanelOpen] = useState(false)
   const [lookingForDriverPanelOpen, setLookingForDriverPanelOpen] = useState(false)
   const [waitingFroDriverPanelOpen, setWaitingFroDriverPanelOpen] = useState(false)
+  const [suggestions, setSuggestions] = useState([])
+  const [activeField, setActiveField] = useState(null)
 
   const HandleSubmit = (e) => {
     e.preventDefault()
@@ -30,6 +33,32 @@ const Home = () => {
     const { name, value } = e.target
     setPickup({ ...pickup, [name]: value })
   }
+
+  useEffect(() => {
+  const delay = setTimeout(async () => {
+
+    const query = pickup.pickup || pickup.drop
+
+    if (query.length > 2) {
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+          params: { input: query },
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+        }})
+        setSuggestions(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      setSuggestions([])
+    }
+
+  }, 500)
+
+  return () => clearTimeout(delay)
+}, [pickup])
+
 
   useGSAP(() => {
    if(panelOpen){
@@ -119,14 +148,20 @@ const Home = () => {
           <div className='line absolute h-16 w-1 top-[45%] left-10 bg-gray-900 rounded-full'></div>
 
           <input 
-           onClick={() => setPanelOpen(true)}
+           onClick={() => {
+           setPanelOpen(true)
+           setActiveField('pickup')
+           }}
            onChange={HandleChange}
            value={pickup.pickup}
            name='pickup'
           className='bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5' type='text' placeholder='Add a pick-up location'/>
          
           <input 
-          onClick={() => setPanelOpen(true)}
+          onClick={() => {
+          setPanelOpen(true)
+          setActiveField('drop')
+          }}
           onChange={HandleChange}
           value={pickup.drop}
           name='drop'
@@ -136,12 +171,12 @@ const Home = () => {
       </div>
 
       <div ref={panelRef} className='bg-white'>
-         <LocationSearchPenal setPanelOpen={setPanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
+         <LocationSearchPenal setPickup={setPickup} suggestions={suggestions} setPanelOpen={setPanelOpen} setVehiclePanelOpen={setVehiclePanelOpen} activeField={activeField}   />
       </div>
       </div>
 
       <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-      <VehiclePanel setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
+      <VehiclePanel setPickup={setPickup} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
       </div>
 
         <div ref={ConfirmedRidePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>

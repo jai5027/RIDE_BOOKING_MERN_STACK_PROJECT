@@ -54,6 +54,14 @@ function calculateFare(distance, duration, vehicleType){
    return Math.round(fare * 100) / 100  // Round to 2 decimal places
 }
 
+function getOtp(num){
+    function generateOtp(num){
+        const otp = crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString()
+        return otp
+    }
+    return generateOtp(num)
+}
+
 const createRide = async ({ 
     user, pickup, destination, vehicleType
  }) => {
@@ -64,7 +72,7 @@ const createRide = async ({
     const fare = await getFare(pickup, destination)
 
     const ride = await rideModel.create({
-          user, pickup, destination, fare: fare[ vehicleType ]
+          user, pickup, destination, otp:getOtp(6), fare: fare[ vehicleType ]
     })
 
     return ride

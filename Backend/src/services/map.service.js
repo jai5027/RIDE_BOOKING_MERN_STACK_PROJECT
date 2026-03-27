@@ -95,7 +95,7 @@ const getSuggestions = async (input) => {
           limit: 10, 
         },
         headers: {
-          "User-Agent": "uber-clone-backend (jiger@email.com)",
+          "User-Agent": "UBER_CLONE (jaishrma27868@gmail.com@email.com)",
         },
       }
     );
