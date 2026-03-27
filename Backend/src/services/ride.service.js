@@ -1,5 +1,6 @@
 const rideModel = require('../models/ride.model.js')
 const mapService = require('../services/map.service.js')
+const crypto = require('crypto')
 
 // Fare rates for different vehicle types (in currency units)
 const FARE_RATES = {
@@ -54,12 +55,18 @@ function calculateFare(distance, duration, vehicleType){
    return Math.round(fare * 100) / 100  // Round to 2 decimal places
 }
 
-function getOtp(num){
-    function generateOtp(num){
-        const otp = crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString()
-        return otp
-    }
-    return generateOtp(num)
+function getOtp(num) {
+  function generateOtp(num) {
+    const min = Math.pow(10, num - 1)
+    const max = Math.pow(10, num) - 1
+
+    const randomNumber = crypto.randomBytes(6).readUIntBE(0, 6)
+    const otp = min + (randomNumber % (max - min + 1))
+
+    return otp.toString()
+  }
+
+  return generateOtp(num)
 }
 
 const createRide = async ({ 
@@ -70,7 +77,7 @@ const createRide = async ({
     }
 
     const fare = await getFare(pickup, destination)
-
+   
     const ride = await rideModel.create({
           user, pickup, destination, otp:getOtp(6), fare: fare[ vehicleType ]
     })

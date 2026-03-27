@@ -24,6 +24,7 @@ const Home = () => {
   const [waitingFroDriverPanelOpen, setWaitingFroDriverPanelOpen] = useState(false)
   const [suggestions, setSuggestions] = useState([])
   const [activeField, setActiveField] = useState(null)
+  const [fare, setFare] = useState({})
 
   const HandleSubmit = (e) => {
     e.preventDefault()
@@ -37,7 +38,8 @@ const Home = () => {
   useEffect(() => {
   const delay = setTimeout(async () => {
 
-    const query = pickup.pickup || pickup.drop
+    if (!activeField) return; 
+    const query = pickup[activeField]
 
     if (query.length > 2) {
       try {
@@ -57,7 +59,7 @@ const Home = () => {
   }, 500)
 
   return () => clearTimeout(delay)
-}, [pickup])
+},  [pickup[activeField], activeField])
 
 
   useGSAP(() => {
@@ -128,6 +130,38 @@ const Home = () => {
     }
   }, [waitingFroDriverPanelOpen])
 
+const findTrip = async () => {
+  setVehiclePanelOpen(true)
+  setPanelOpen(false)
+
+  const respones = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+    params: {   pickup: pickup.pickup, 
+                destination: pickup.drop 
+ },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+  setFare(respones.data)
+}
+
+async function createRide(vehicleType){
+  try {
+  const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+    pickup: pickup.pickup, 
+    destination: pickup.drop,
+    vehicleType 
+  }, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+  console.log(response.data)
+ 
+  } catch (error) {
+    console.log(error.response?.data)
+  }
+}
 
   return (
     <div className='h-screen relative'>
@@ -155,7 +189,7 @@ const Home = () => {
            onChange={HandleChange}
            value={pickup.pickup}
            name='pickup'
-          className='bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5' type='text' placeholder='Add a pick-up location'/>
+           className='bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5' type='text' placeholder='Add a pick-up location'/>
          
           <input 
           onClick={() => {
@@ -168,6 +202,8 @@ const Home = () => {
           className='bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-4' type='text' placeholder='Enter your destination'/>
         
         </form>
+        <button onClick={findTrip} 
+          className='bg-black text-white py-2 px-4 rounded-lg w-full mt-3'>Find Ride</button>
       </div>
 
       <div ref={panelRef} className='bg-white'>
@@ -176,7 +212,7 @@ const Home = () => {
       </div>
 
       <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-      <VehiclePanel setPickup={setPickup} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
+      <VehiclePanel createRide={createRide} fare={fare} setPickup={setPickup} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
       </div>
 
         <div ref={ConfirmedRidePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
