@@ -25,6 +25,7 @@ const Home = () => {
   const [suggestions, setSuggestions] = useState([])
   const [activeField, setActiveField] = useState(null)
   const [fare, setFare] = useState({})
+  const [vehicleType, setVehicleType] = useState(null)
 
   const HandleSubmit = (e) => {
     e.preventDefault()
@@ -145,7 +146,7 @@ const findTrip = async () => {
   setFare(respones.data)
 }
 
-async function createRide(vehicleType){
+async function createRide(){
   try {
   const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
     pickup: pickup.pickup, 
@@ -157,7 +158,7 @@ async function createRide(vehicleType){
     }
   })
   console.log(response.data)
- 
+
   } catch (error) {
     console.log(error.response?.data)
   }
@@ -212,15 +213,15 @@ async function createRide(vehicleType){
       </div>
 
       <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-      <VehiclePanel createRide={createRide} fare={fare} setPickup={setPickup} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
+      <VehiclePanel selectVehicle={setVehicleType} fare={fare} setPickup={setPickup} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen}/>
       </div>
 
         <div ref={ConfirmedRidePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-         <ConfirmedRide setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
+         <ConfirmedRide fare={fare} pickup={pickup.pickup} destination={pickup.drop} createRide={createRide} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
       </div>
 
         <div ref={lookingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-         <LookingForDriver setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
+         <LookingForDriver pickup={pickup.pickup} destination={pickup.drop} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
       </div>
 
         <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>

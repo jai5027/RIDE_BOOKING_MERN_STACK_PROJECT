@@ -9,7 +9,7 @@ const VehiclePanel = (props) => {
         <h3 className='text-2xl font-semibold mb-5'>Choose a Vehicle</h3>
 
           <div onClick={() => {props.setConfirmedRidePanelOpen(true)
-                               props.createRide('car')
+                               props.selectVehicle('car')
           }} className='p-3 mb-2 flex border-2 border-gray-300 active:border-black rounded-xl w-full justify-center items-center'>
             <img className='h-15' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9iYWRmYjFkNi02YzJiLTQ1NTMtYjkyOS05ZmYzMmYwMmE1NWUucG5n' alt=''/>
            
@@ -26,7 +26,7 @@ const VehiclePanel = (props) => {
         </div>
 
          <div onClick={() => {props.setConfirmedRidePanelOpen(true)
-                               props.createRide('motorcycle')
+                               props.selectVehicle('motorcycle')
          }} className='p-3 mb-2 flex border-2 border-gray-300 active:border-black rounded-xl w-full justify-center items-center'>
             <img className='h-15' src='https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy85MjAwMTg5YS03MWMwLTRmNmQtYTlkZS0xYjZhODUyMzkwNzkucG5n' alt=''/>
            
@@ -43,7 +43,7 @@ const VehiclePanel = (props) => {
         </div>
 
           <div onClick={() => {props.setConfirmedRidePanelOpen(true)
-                               props.createRide('auto')
+                               props.selectVehicle('auto')
           }} className='p-3 mb-2 flex border-2 border-gray-300 active:border-black rounded-xl w-full justify-center items-center'>
             <img className='h-15' src='https://clipart-library.com/2023/Uber_Auto_312x208_pixels_Mobile.png' alt=''/>
            

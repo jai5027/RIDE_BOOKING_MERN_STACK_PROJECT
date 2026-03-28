@@ -15,7 +15,7 @@ const LookingForDriver = (props) => {
                 <i className="text-lg ri-map-pin-user-fill"></i>
                 <div>
                     <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>Kahankariya Talab, Jaipur</p>
+                    <p className='text-sm -mt-1 text-gray-600'>{props.pickup}</p>
                 </div>
             </div>
 
@@ -23,7 +23,7 @@ const LookingForDriver = (props) => {
                 <i className="text-lg ri-map-pin-2-fill"></i>
                 <div>
                     <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>Kahankariya Talab, Jaipur</p>
+                    <p className='text-sm -mt-1 text-gray-600'>{props.destination}</p>
                 </div>
             </div>
 

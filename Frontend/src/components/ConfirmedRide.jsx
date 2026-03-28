@@ -15,7 +15,7 @@ const ConfirmedRide = (props) => {
                 <i className="text-lg ri-map-pin-user-fill"></i>
                 <div>
                     <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>Kahankariya Talab, Jaipur</p>
+                    <p className='text-sm -mt-1 text-gray-600'>{props.pickup}</p>
                 </div>
             </div>
 
@@ -23,7 +23,7 @@ const ConfirmedRide = (props) => {
                 <i className="text-lg ri-map-pin-2-fill"></i>
                 <div>
                     <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>Kahankariya Talab, Jaipur</p>
+                    <p className='text-sm -mt-1 text-gray-600'>{props.destination}</p>
                 </div>
             </div>
 
@@ -37,7 +37,9 @@ const ConfirmedRide = (props) => {
 
         </div>
         <button onClick={() => {props.setLookingForDriverPanelOpen(true) 
-                                props.setConfirmedRidePanelOpen(false)}} 
+                                props.setConfirmedRidePanelOpen(false)
+                                props.createRide()
+                            }} 
         className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>Confirm</button>
         </div>   
     </div>
