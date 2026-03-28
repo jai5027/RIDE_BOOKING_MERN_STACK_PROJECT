@@ -217,11 +217,11 @@ async function createRide(){
       </div>
 
         <div ref={ConfirmedRidePanelRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-         <ConfirmedRide fare={fare} pickup={pickup.pickup} destination={pickup.drop} createRide={createRide} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
+         <ConfirmedRide vehicleType={vehicleType} fare={fare} pickup={pickup.pickup} destination={pickup.drop} createRide={createRide} setConfirmedRidePanelOpen={setConfirmedRidePanelOpen} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
       </div>
 
         <div ref={lookingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-         <LookingForDriver pickup={pickup.pickup} destination={pickup.drop} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
+         <LookingForDriver vehicleType={vehicleType} fare={fare} pickup={pickup.pickup} destination={pickup.drop} setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}/>
       </div>
 
         <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
