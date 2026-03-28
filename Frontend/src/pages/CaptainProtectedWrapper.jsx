@@ -28,7 +28,7 @@ const CaptainProtectedWrapper = ({ children }) => {
                     })
 
                 if (response.status === 200) {
-                    setCaptain(response.data.user)
+                    setCaptain(response.data.captain)
                 }
 
             } catch (error) {
