@@ -18,6 +18,8 @@ const initializeSocket = (server) => {
         socket.on('join', async (data) => {
             const { userId, userType } = data
 
+            console.log(`User ${userId} joined as ${userType}`)
+
             if(userType === 'user'){
                 await userModel.findOneAndUpdate(
                     { _id: userId },
@@ -30,6 +32,18 @@ const initializeSocket = (server) => {
                     { socketId: socket.id }
                 )
             }
+        })
+
+        socket.on('update-location-captain', async (data) => {
+            const { userId, location } = data
+
+            if(!location || !location.ltd || !location.lng){
+                return socket.emit('error', { message: 'Invalid location data' })
+            }
+                await captainModel.findByIdAndUpdate(userId, { location: {
+                    ltd: location.ltd,
+                    lng: location.lng
+                } })
         })
 
         socket.on('disconnect', () => {

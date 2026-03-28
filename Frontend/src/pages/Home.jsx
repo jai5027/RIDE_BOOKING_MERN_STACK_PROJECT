@@ -8,6 +8,8 @@ import ConfirmedRide from '../components/ConfirmedRide.jsx'
 import LookingForDriver from '../components/LookingForDriver.jsx'
 import WaitingForDriver from '../components/WaitingForDriver.jsx'
 import axios from 'axios'
+import { useSocket } from '../context/SocketContext.jsx'
+import { useUser } from '../context/userContext.jsx'
 
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
@@ -26,6 +28,13 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null)
   const [fare, setFare] = useState({})
   const [vehicleType, setVehicleType] = useState(null)
+  const { user } = useUser()
+ 
+  const { socket } = useSocket()
+
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id  })
+  }, [user])
 
   const HandleSubmit = (e) => {
     e.preventDefault()

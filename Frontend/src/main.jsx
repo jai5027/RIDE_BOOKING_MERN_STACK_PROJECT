@@ -17,6 +17,7 @@ import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper.jsx'
 import CaptainLogout from './pages/CaptainLogout.jsx'
 import Riding from './pages/Riding.jsx';
 import CaptainRiding from './pages/CaptainRiding.jsx';
+import { SocketProvider } from './context/SocketContext.jsx';
 
 const router = createBrowserRouter([{
       path: '/',
@@ -89,9 +90,11 @@ const router = createBrowserRouter([{
 ])
 
 createRoot(document.getElementById('root')).render(
+    <SocketProvider>
     <ProvideContext>
     <UserProvider>
     <RouterProvider router={router}/>
     </UserProvider>
     </ProvideContext>
+    </SocketProvider>
 )

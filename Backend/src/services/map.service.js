@@ -1,4 +1,5 @@
 const axios = require("axios");
+ const captainModel = require('../models/captain.model.js')
 
 const getCoordinates = async (address) => {
   try {
@@ -19,12 +20,13 @@ const getCoordinates = async (address) => {
       throw new Error("Location not found");
     }
 
-    const { lat, lon } = response.data[0];
+     const { lat, lon } = response.data[0];
 
     return {
-      latitude: lat,
-      longitude: lon,
+      lat: parseFloat(lat),
+      lng: parseFloat(lon),
     };
+
   } catch (error) {
     throw error;
   }
@@ -56,7 +58,7 @@ const getDistanceTime = async (origin, destination) => {
 
       return {
         lat: response.data[0].lat,
-        lon: response.data[0].lon,
+        lng: response.data[0].lng,
       };
     };
 
@@ -102,17 +104,29 @@ const getSuggestions = async (input) => {
     
     return response.data.map((item) => ({
       display_name: item.display_name,
-      latitude: item.lat,
-      longitude: item.lon,
+      latitude: item.ltd,
+      longitude: item.lng,
     }));
   } catch (error) {
     throw error;
   }
 };
 
+const getCaptaininTheRedius = async (lat, lng, radius) => {
+  const captains = await captainModel.find({
+     location: {
+       $geoWithin: {
+         $centerSphere: [ [ lat, lng ], radius / 6371 ]
+       }
+     }
+  })
+
+  return captains
+}
 
 module.exports = {
   getCoordinates,
   getDistanceTime,
-  getSuggestions
+  getSuggestions,
+  getCaptaininTheRedius
 };
