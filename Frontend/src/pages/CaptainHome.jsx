@@ -32,18 +32,17 @@ const CaptainHome = () => {
                     socket.emit('update-location-captain', {
                         userId: captain._id,
                         location: {
-                            ltd: position.coords.latitude,
+                            lat: position.coords.latitude,
                             lng: position.coords.longitude
                         }
                     })
                 })
             }
         }
-
          const locationInterval = setInterval(updateLocation, 10000)
-        // updateLocation()
+         updateLocation()
        
-        // return () => clearInterval(locationInterval)
+        //  return () => clearInterval(locationInterval)
 
   },[])
 

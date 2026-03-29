@@ -24,7 +24,7 @@ const getCoordinates = async (address) => {
 
     return {
       lat: parseFloat(lat),
-      lng: parseFloat(lon),
+      lon: parseFloat(lon),
     };
 
   } catch (error) {
@@ -56,10 +56,10 @@ const getDistanceTime = async (origin, destination) => {
         throw new Error("Location not found");
       }
 
-      return {
-        lat: response.data[0].lat,
-        lng: response.data[0].lng,
-      };
+     return {
+  lat: parseFloat(response.data[0].lat),
+  lon: parseFloat(response.data[0].lon),
+};
     };
 
     const start = await geo(origin);
@@ -102,11 +102,12 @@ const getSuggestions = async (input) => {
       }
     );
     
-    return response.data.map((item) => ({
-      display_name: item.display_name,
-      latitude: item.ltd,
-      longitude: item.lng,
-    }));
+return response.data.map((item) => ({
+  display_name: item.display_name,
+  latitude: parseFloat(item.lat),
+  longitude: parseFloat(item.lon),
+}));
+
   } catch (error) {
     throw error;
   }
@@ -116,7 +117,7 @@ const getCaptaininTheRedius = async (lat, lng, radius) => {
   const captains = await captainModel.find({
      location: {
        $geoWithin: {
-         $centerSphere: [ [ lat, lng ], radius / 6371 ]
+         $centerSphere: [ [ lng, lat ], radius / 6371 ]
        }
      }
   })

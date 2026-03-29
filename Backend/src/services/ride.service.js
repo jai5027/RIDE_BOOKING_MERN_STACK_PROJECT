@@ -79,7 +79,7 @@ const createRide = async ({
     const fare = await getFare(pickup, destination)
    
     const ride = await rideModel.create({
-          user, pickup, destination, otp:getOtp(6), fare: fare[ vehicleType ]
+          user, pickup, destination, vehicleType, otp:getOtp(6), fare: fare[ vehicleType ]
     })
 
     return ride

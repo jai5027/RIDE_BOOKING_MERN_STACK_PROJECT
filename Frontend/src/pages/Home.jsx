@@ -50,7 +50,7 @@ const Home = () => {
 
     if (!activeField) return; 
     const query = pickup[activeField]
-
+    
     if (query.length > 2) {
       try {
         const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
