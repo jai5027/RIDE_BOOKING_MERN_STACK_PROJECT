@@ -8,6 +8,7 @@ import ConfirRidePopup from '../components/ConfirRidePopup'
 import { useEffect } from 'react'
 import { useSocket } from '../context/SocketContext.jsx'
 import { useCaptain } from '../context/CaptainContext.jsx'
+import axios from 'axios'
 
 const CaptainHome = () => {
 
@@ -54,6 +55,21 @@ const CaptainHome = () => {
     setRidePopupPanel(true)
   })
 
+  async function confirmRide(){
+      await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+      rideId: ride._id,
+      captainId: captain._id,
+  }, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+    setRidePopupPanel(false)
+    setConfirmRidePopupPanel(true)
+  }
+
+
   useGSAP(() => {
     if(ridePopupPanel){
       gsap.to(ridePopupPanelRef.current, {
@@ -97,7 +113,7 @@ const CaptainHome = () => {
         </div>
 
          <div ref={ridePopupPanelRef} className='fixed w-full z-10 bottom-0 translate-y-full px-3 py-10 bg-white'>
-           <RidePopup ride={ride} setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel}/>
+           <RidePopup confirmRide={confirmRide} ride={ride} setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel}/>
       </div>
 
         <div ref={confirmRidePopupPanelRef} className='fixed w-full h-screen z-10 bottom-0 translate-y-full px-3 py-10 bg-white'>

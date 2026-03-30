@@ -36,6 +36,13 @@ const Home = () => {
     socket.emit("join", { userType: "user", userId: user._id  })
   }, [user])
 
+  socket.on('ride-confirmed', (data) => {
+    console.log(data)
+    setConfirmedRidePanelOpen(false)
+    setLookingForDriverPanelOpen(false)
+    setWaitingFroDriverPanelOpen(true)
+})
+  
   const HandleSubmit = (e) => {
     e.preventDefault()
   }
@@ -141,18 +148,28 @@ const Home = () => {
   }, [waitingFroDriverPanelOpen])
 
 const findTrip = async () => {
-  setVehiclePanelOpen(true)
-  setPanelOpen(false)
+  try {
+    setVehiclePanelOpen(true)
+    setPanelOpen(false)
 
-  const respones = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
-    params: {   pickup: pickup.pickup, 
-                destination: pickup.drop 
- },
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
-  })
-  setFare(respones.data)
+    const response = await axios.get(
+      `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+      {
+        params: {
+          pickup: pickup.pickup,
+          destination: pickup.drop
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      }
+    )
+
+    setFare(response.data)
+
+  } catch (error) {
+    console.log("ERROR:", error.response?.data || error.message)
+  }
 }
 
 async function createRide(){
