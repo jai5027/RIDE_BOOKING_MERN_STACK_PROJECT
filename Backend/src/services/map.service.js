@@ -9,7 +9,8 @@ const getCoordinates = async (address) => {
         params: {
           q: address,
           format: "json",
-          limit: 1,
+          limit: 5,
+          countrycodes: "in" 
         },
               headers: {
         "User-Agent": "UBER_CLONE (jaisharma27868@gmail.com)", // IMPORTANT
@@ -113,16 +114,18 @@ return response.data.map((item) => ({
   }
 };
 
-const getCaptaininTheRedius = async (lat, lng, radius) => {
-  const captains = await captainModel.find({
-     location: {
-       $geoWithin: {
-         $centerSphere: [ [ lng, lat ], radius / 6371 ]
-       }
-     }
+const getCaptaininTheRedius = async (lng, lat, radius) => {
+  return await captainModel.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: "Point",
+          coordinates: [lng, lat]
+        },
+        $maxDistance: radius
+      }
+    }
   })
-
-  return captains
 }
 
 module.exports = {
