@@ -11,8 +11,10 @@ import { useCaptain } from '../context/CaptainContext.jsx'
 
 const CaptainHome = () => {
 
-  const [ridePopupPanel, setRidePopupPanel] = useState(true)
+  const [ridePopupPanel, setRidePopupPanel] = useState(false)
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false)
+  const [ride, setRide] = useState(null)
+
   const ridePopupPanelRef = useRef(null)
   const confirmRidePopupPanelRef = useRef(null)
 
@@ -45,6 +47,12 @@ const CaptainHome = () => {
         //  return () => clearInterval(locationInterval)
 
   },[])
+
+  socket.on('new-ride', (data) => {
+    console.log(data)
+    setRide(data)
+    setRidePopupPanel(true)
+  })
 
   useGSAP(() => {
     if(ridePopupPanel){
@@ -89,7 +97,7 @@ const CaptainHome = () => {
         </div>
 
          <div ref={ridePopupPanelRef} className='fixed w-full z-10 bottom-0 translate-y-full px-3 py-10 bg-white'>
-           <RidePopup setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel}/>
+           <RidePopup ride={ride} setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel}/>
       </div>
 
         <div ref={confirmRidePopupPanelRef} className='fixed w-full h-screen z-10 bottom-0 translate-y-full px-3 py-10 bg-white'>

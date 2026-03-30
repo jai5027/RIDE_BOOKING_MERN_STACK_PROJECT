@@ -59,9 +59,9 @@ const initializeSocket = (server) => {
     return io;
 };
 
-const sendMessageToSocketId = (socketId, event, data) => {
+const sendMessageToSocketId = (socketId, messageObject) => {
     if (io) {
-        io.to(socketId).emit(event, data);
+        io.to(socketId).emit(messageObject.event, messageObject.data);
     }
 };
 
