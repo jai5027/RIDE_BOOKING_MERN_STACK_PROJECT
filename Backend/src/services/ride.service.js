@@ -85,7 +85,7 @@ const createRide = async ({
     return ride
 }
 
-const confirmRide = async (rideId, captainId) => {
+const confirmRide = async ({rideId, captainId}) => {
     if(!rideId || !captainId){
         throw new Error('Ride ID and Captain ID are required')
     }

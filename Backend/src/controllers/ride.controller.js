@@ -65,8 +65,8 @@ const rideModel = require('../models/ride.model.js')
 
     const { rideId } = req.body
     try {
-        const ride = await rideService.confirmRide({rideId, captain: req.captain._id})
-        console.log("FINAL URL:", `${import.meta.env.VITE_BASE_URL}/rides/confirm`)
+        const ride = await rideService.confirmRide({ rideId,  captainId: req.captain._id })
+        
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-confirmed',
             data: ride
@@ -74,6 +74,7 @@ const rideModel = require('../models/ride.model.js')
 
         return res.status(200).json(ride)
     } catch (error) {
+        console.log("ERROR:", error.message) 
         return res.status(500).json({ message: error.message })
     }
  }
