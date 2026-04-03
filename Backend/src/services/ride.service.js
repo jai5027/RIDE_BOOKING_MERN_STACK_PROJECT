@@ -103,7 +103,7 @@ const confirmRide = async ({rideId, captainId}) => {
 }
 
 const startRide = async ({ rideId, otp, captain }) => {
-    if(!rideId || !otp || !captain){
+    if(!rideId || !otp){
         throw new Error('Ride ID, OTP, and Captain ID are required')
     }
 
@@ -119,7 +119,7 @@ const startRide = async ({ rideId, otp, captain }) => {
 
     if(ride.otp !== otp){
         throw new Error('Invalid OTP')
-    }
+    }   
 
     await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'ongoing' })
 

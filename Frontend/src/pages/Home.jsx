@@ -46,11 +46,11 @@ const Home = () => {
     setRide(data)
 })
 
-socket.on('ride-started', (data) => {
+socket.on('ride-started', (ride) => {
   setWaitingFroDriverPanelOpen(false)
-  navigate('/riding')
+  navigate('/riding', { state: { ride } })
 })
-  
+   
   const HandleSubmit = (e) => {
     e.preventDefault()
   }
