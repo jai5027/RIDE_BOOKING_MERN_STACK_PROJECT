@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 const Riding = () => {
     const location = useLocation()
     const { ride } = location.state || {}
-    const socket = useSocket()
+    const { socket } = useSocket()
     const navigate = useNavigate()
 
     socket.on('ride-ended', () => {

@@ -137,7 +137,7 @@ const endRide = async ({ rideId, captain }) => {
   
     const ride = await rideModel.findOne({ 
         _id: rideId,
-        captain: captain._id
+        captain: captain
     }).populate('user').populate('captain')
 
     if(!ride){

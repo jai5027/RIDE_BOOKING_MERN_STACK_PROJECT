@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const FinishRide = (props) => {
+const navigate = useNavigate()
 
     async function finishRide(){    
        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
@@ -15,7 +17,7 @@ const FinishRide = (props) => {
 
     if(response.status === 200){
         props.setFinishRidePanel(false)
-        navigation('/captain-home')
+        navigate('/captain-home')
     }
     }
 
@@ -29,7 +31,7 @@ const FinishRide = (props) => {
         <div className='flex items-center justify-between p-4 border-2 border-yellow-400 rounded-lg mt-4'>
             <div className='flex items-center gap-3'>
                 <img className='h-12 rounded-full object-cover w-12' src='https://img.freepik.com/premium-photo/portrait-smiling-driver-driving-his-car-giving-thumbs-up-camera_232070-25141.jpg' />
-                <h2 className='text-lg font-medium'>{props.rideData?.user?.fullname?.firstName + " " + props.rideData?.user?.fullname?.lastName}</h2>
+                <h2 className='text-lg font-medium'>{props.ride?.user?.fullname?.firstName + " " + props.ride?.user?.fullname?.lastName}</h2>
             </div>
             <h5 className='text-lg font-medium'>2.2 KM</h5>
         </div>
@@ -40,7 +42,7 @@ const FinishRide = (props) => {
                 <i className="text-lg ri-map-pin-user-fill"></i>
                 <div>
                     <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>{props.rideData?.pickup}</p>
+                    <p className='text-sm -mt-1 text-gray-600'>{props.ride?.pickup}</p>
                 </div>
             </div>
 
@@ -48,14 +50,14 @@ const FinishRide = (props) => {
                 <i className="text-lg ri-map-pin-2-fill"></i>
                 <div>
                     <h3 className='text-lg font-medium'>562/11-A</h3>
-                    <p className='text-sm -mt-1 text-gray-600'>{props.rideData?.destination}</p>
+                    <p className='text-sm -mt-1 text-gray-600'>{props.ride?.destination}</p>
                 </div>
             </div>
 
             <div className='flex items-center gap-5 p-3'>
                 <i className="ri-currency-line"></i>
                 <div>
-                    <h3 className='text-lg font-medium'>₹{props.rideData?.fare}</h3>
+                    <h3 className='text-lg font-medium'>₹{props.ride?.fare}</h3>
                     <p className='text-sm -mt-1 text-gray-600'>Cash Cash</p>
                 </div>
             </div>

@@ -118,4 +118,4 @@ const endRide = async (req, res) => {
         return res.status(500).json({ message: error.message })
     } 
 }
- module.exports = { createRide, getFare, confirmRide, startRide }
+ module.exports = { createRide, getFare, confirmRide, startRide, endRide }

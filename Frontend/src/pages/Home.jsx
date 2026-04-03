@@ -11,6 +11,7 @@ import axios from 'axios'
 import { useSocket } from '../context/SocketContext.jsx'
 import { useUser } from '../context/userContext.jsx'
 import { useNavigate } from 'react-router-dom'
+import LiveMap from '../components/LiveMap.jsx'
 
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
