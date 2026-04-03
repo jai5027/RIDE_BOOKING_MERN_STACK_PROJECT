@@ -10,6 +10,7 @@ import WaitingForDriver from '../components/WaitingForDriver.jsx'
 import axios from 'axios'
 import { useSocket } from '../context/SocketContext.jsx'
 import { useUser } from '../context/userContext.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
@@ -30,8 +31,9 @@ const Home = () => {
   const [vehicleType, setVehicleType] = useState(null)
   const [ride, setRide] = useState(null)
   const { user } = useUser()
- 
   const { socket } = useSocket()
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     socket.emit("join", { userType: "user", userId: user._id  })
@@ -42,6 +44,11 @@ const Home = () => {
     setLookingForDriverPanelOpen(false)
     setWaitingFroDriverPanelOpen(true)
     setRide(data)
+})
+
+socket.on('ride-started', (data) => {
+  setWaitingFroDriverPanelOpen(false)
+  navigate('/riding')
 })
   
   const HandleSubmit = (e) => {
@@ -175,7 +182,7 @@ const findTrip = async () => {
 
 async function createRide(){
   try {
-  const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+    await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
     pickup: pickup.pickup, 
     destination: pickup.drop,
     vehicleType 
@@ -184,7 +191,6 @@ async function createRide(){
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   })
-  console.log(response.data)
 
   } catch (error) {
     console.log(error.response?.data)

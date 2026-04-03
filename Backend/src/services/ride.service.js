@@ -1,6 +1,7 @@
 const rideModel = require('../models/ride.model.js')
 const mapService = require('../services/map.service.js')
 const crypto = require('crypto')
+const { sendMessageToSocketId } = require('../socket.js')
 
 // Fare rates for different vehicle types (in currency units)
 const FARE_RATES = {
@@ -93,7 +94,7 @@ const confirmRide = async ({rideId, captainId}) => {
     await rideModel.findOneAndUpdate({ _id: rideId }, 
         { captain: captainId, status: 'accepted' })
 
-        const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain')
+        const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain').select('+otp')
         
         if(!ride){
             throw new Error('Ride not found')
@@ -101,11 +102,38 @@ const confirmRide = async ({rideId, captainId}) => {
         return ride
 }
 
+const startRide = async ({ rideId, otp, captain }) => {
+    if(!rideId || !otp || !captain){
+        throw new Error('Ride ID, OTP, and Captain ID are required')
+    }
 
+    const ride = await rideModel.findOne({ _id: rideId }).populate('user').populate('captain').select('+otp')
+
+    if(!ride){
+        throw new Error('Invalid ride ID or OTP')
+    }
+    
+    if(ride.status !== 'accepted'){
+        throw new Error('Ride is not in accepted status')
+    }
+
+    if(ride.otp !== otp){
+        throw new Error('Invalid OTP')
+    }
+
+    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'ongoing' })
+
+    sendMessageToSocketId(ride.user.socketId, {
+        event: 'ride-started',
+        data: ride
+    })
+    return ride
+}
 
 module.exports = {
     createRide,
     getFare,
-    confirmRide
+    confirmRide,
+    startRide
 }           
     
