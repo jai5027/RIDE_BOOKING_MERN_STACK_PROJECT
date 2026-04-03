@@ -28,6 +28,7 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null)
   const [fare, setFare] = useState({})
   const [vehicleType, setVehicleType] = useState(null)
+  const [ride, setRide] = useState(null)
   const { user } = useUser()
  
   const { socket } = useSocket()
@@ -37,10 +38,10 @@ const Home = () => {
   }, [user])
 
   socket.on('ride-confirmed', (data) => {
-    console.log(data)
     setConfirmedRidePanelOpen(false)
     setLookingForDriverPanelOpen(false)
     setWaitingFroDriverPanelOpen(true)
+    setRide(data)
 })
   
   const HandleSubmit = (e) => {
@@ -251,7 +252,9 @@ async function createRide(){
       </div>
 
         <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 px-3 py-10 translate-y-full bg-white'>
-         <WaitingForDriver setWaitingFroDriverPanelOpen={setWaitingFroDriverPanelOpen} />
+         <WaitingForDriver 
+          ride={ride}
+         setWaitingFroDriverPanelOpen={setWaitingFroDriverPanelOpen} />
       </div>
     </div>
   )
