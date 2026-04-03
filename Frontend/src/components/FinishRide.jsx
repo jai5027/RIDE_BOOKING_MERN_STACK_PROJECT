@@ -1,7 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const FinishRide = (props) => {
+
+    async function finishRide(){    
+       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
+           rideId: props.ride._id
+    }, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }   
+    })
+
+    if(response.status === 200){
+        props.setFinishRidePanel(false)
+        navigation('/captain-home')
+    }
+    }
+
   return (
       <div>
         <h5 onClick={() => props.setFinishRidePanel(false)} className='p-2 text-center absolute top-2 right-4'>
@@ -46,8 +63,8 @@ const FinishRide = (props) => {
         </div>
          <div className='flex flex-col w-full mt-10'>
             
-        <Link to='/captain-home'
-         className='w-full mt-3 flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg'>Finish Ride</Link>
+        <button onClick={finishRide}
+         className='w-full mt-3 flex justify-center bg-green-600 text-white font-semibold p-3 rounded-lg'>Finish Ride</button>
          </div>
         </div>   
     </div>

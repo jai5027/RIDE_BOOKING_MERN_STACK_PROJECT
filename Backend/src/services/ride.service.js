@@ -130,10 +130,33 @@ const startRide = async ({ rideId, otp, captain }) => {
     return ride
 }
 
+const endRide = async ({ rideId, captain }) => {
+    if(!rideId){
+        throw new Error('Ride ID and Captain ID are required')
+    }
+  
+    const ride = await rideModel.findOne({ 
+        _id: rideId,
+        captain: captain._id
+    }).populate('user').populate('captain')
+
+    if(!ride){
+        throw new Error('Invalid ride ID')
+    }
+
+    if(ride.status !== 'ongoing'){
+        throw new Error('Ride is not in ongoing status')
+    }
+
+    await rideModel.findOneAndUpdate({ _id: rideId }, { status: 'completed' })
+  
+    return ride
+}    
+
 module.exports = {
     createRide,
     getFare,
     confirmRide,
-    startRide
+    startRide,
+    endRide
 }           
-    
