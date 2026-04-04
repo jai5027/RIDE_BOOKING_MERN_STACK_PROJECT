@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import FinishRide from '../components/FinishRide'
+import LiveMap from '../components/LiveMap.jsx'
+import { useSocket } from '../context/SocketContext.jsx'
+import { useCaptain } from '../context/CaptainContext.jsx'
 
 const CaptainRiding = () => {
 
@@ -10,6 +13,12 @@ const CaptainRiding = () => {
     const finishRidePanelRef = useRef(null)
     const location = useLocation()
     const rideData = location.state?.ride
+
+    const { socket } = useSocket()
+  const { captain } = useCaptain()
+
+  // 📍 captain position
+  const [position, setPosition] = useState([26.9124, 75.7873])
 
     useGSAP(() => {
     if(finishRidePanel){
@@ -23,22 +32,52 @@ const CaptainRiding = () => {
     }
   }, [finishRidePanel])
 
+    useEffect(() => {
+    if (!socket || !captain || !rideData) return
+
+    const updateLocation = () => {
+      navigator.geolocation.getCurrentPosition((pos) => {
+
+        const lat = pos.coords.latitude
+        const lng = pos.coords.longitude
+
+        // ✅ map update
+        setPosition([lat, lng])
+
+        // ✅ send to user
+        socket.emit('send-location', {
+          captainId: captain._id,
+          rideId: rideData._id,
+          location: { lat, lng }
+        })
+
+      })
+    }
+      const interval = setInterval(updateLocation, 3000)
+    updateLocation()
+
+    return () => clearInterval(interval)
+
+  }, [socket, captain, rideData])
+
+
   return (
   <div className='h-screen'>
      
-      <div className='fixed p-6 top-0 flex items-center justify-between w-full'>
-        <img className='w-16' src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png' alt=''/>
+      <div className='fixed p-6 top-0 flex items-center justify-between w-full z-1'>
+        <img className='w-16 ml-8' src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png' alt=''/>
       <Link to='/home' className='h-10 w-10 bg-white flex items-center justify-center rounded-full'>
         <i className="text-lg font-medium ri-logout-box-line"></i>
       </Link>
       </div>
 
-      <div className='h-4/5'>
-        <img className='h-full w-full object-cover' src='https://cdn.theatlantic.com/thumbor/BlEOtTo9L9mjMLuyCcjG3xYr4qE=/0x48:1231x740/960x540/media/img/mt/2017/04/IMG_7105/original.png' alt=''/>
+      <div className='absolute inset-0 z-0'>
+        <LiveMap position={position} />
       </div>
 
-      <div className='h-1/5 p-6 flex justify-between items-center relative bg-yellow-400'
-       onClick={() => setFinishRidePanel(true)}
+       <div 
+        className='h-1/5 p-6 flex justify-between items-center absolute bottom-0 w-full z-10 bg-yellow-400'
+        onClick={() => setFinishRidePanel(true)}
       >
        <h5 className='w-full text-center absolute top-0 right-1'>
         <i className="text-3xl text-black ri-arrow-up-wide-line"></i>

@@ -12,6 +12,7 @@ import { useSocket } from '../context/SocketContext.jsx'
 import { useUser } from '../context/userContext.jsx'
 import { useNavigate } from 'react-router-dom'
 import LiveMap from '../components/LiveMap.jsx'
+import { useCaptain } from '../context/CaptainContext.jsx'
 
 const Home = () => {
   const [pickup, setPickup] = useState({ pickup: '', drop: '' })
@@ -34,7 +35,38 @@ const Home = () => {
   const { user } = useUser()
   const { socket } = useSocket()
 
+
   const navigate = useNavigate()
+  const { captain } = useCaptain()
+    const [position, setPosition] = useState([26.9124, 75.7873])
+  
+  useEffect(() => {
+    if (!socket || !captain) return
+  
+    const updateLocation = () => {
+      navigator.geolocation.getCurrentPosition((pos) => {
+  
+        const lat = pos.coords.latitude
+        const lng = pos.coords.longitude
+  
+        setPosition([lat, lng])
+  
+        socket.emit('send-location', {
+          captainId: captain._id,
+          rideId: ride?._id,
+          location: { lat, lng }
+        })
+  
+      })
+    }
+  
+    const interval = setInterval(updateLocation, 3000)
+  
+    updateLocation()
+  
+    return () => clearInterval(interval)
+  
+  }, [socket, captain, ride])
 
   useEffect(() => {
     socket.emit("join", { userType: "user", userId: user._id  })
@@ -202,13 +234,18 @@ async function createRide(){
     <div className='h-screen relative'>
       <img className='w-16 absolute left-5 top-5' src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'/>
       
-      <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover' src='https://cdn.theatlantic.com/thumbor/BlEOtTo9L9mjMLuyCcjG3xYr4qE=/0x48:1231x740/960x540/media/img/mt/2017/04/IMG_7105/original.png' alt=''/>
-      </div>
+<div className='absolute inset-0 z-0'>
+  <LiveMap position={position} /> 
+</div>
 
-      <div className='flex flex-col justify-end h-screen absolute bottom-0 w-full'>
+  <img 
+    className='w-16 absolute right-5 top-5 z-10'
+    src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png'
+  />
 
-      <div className='h-[30%] p-6 bg-white relative'>
+      <div className='flex flex-col justify-end h-screen absolute bottom-0 w-full z-10 '>
+
+<div className='h-[30%] p-6 bg-white relative rounded-t-2xl shadow-lg '>
         <h5 ref={panelCloseRef} onClick={() => setPanelOpen(false)} className='opacity-0 text-xl absolute top-4 right-6'>
           <i className="ri-arrow-down-wide-line"></i>
         </h5>
